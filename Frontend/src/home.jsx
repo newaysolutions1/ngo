@@ -1,4 +1,3 @@
-// src/components/ChoosePathCard.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -24,8 +23,6 @@ export default function Home() {
             Page Education
           </p>
         </Link>
-
-        {/* heading */}
         <h1 className="absolute top-15 left-1/2 -translate-x-1/2 text-center text-4xl sm:text-5xl font-bold text-white z-10">
           Choose Your Path
         </h1>

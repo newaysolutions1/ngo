@@ -11,7 +11,12 @@ export default function StudentSection() {
     { label: "Books & Materials", amount: 500 },
   ];
 
-  const tabs = ["Overview", "Financial Needs", "Authenticity", "Goals & Updates"];
+  const tabs = [
+    "Overview",
+    "Financial Needs",
+    "Authenticity",
+    "Goals & Updates",
+  ];
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -25,12 +30,17 @@ export default function StudentSection() {
           <div>
             <h2 className="text-2xl font-bold">Maria Rodriguez</h2>
             <p className="mt-2 text-sm text-gray-600">
-              I am the first in my family pursuing higher education. My dream is to become a doctor and return to my rural
-              hometown where medical care is scarce.
+              I am the first in my family pursuing higher education. My dream is
+              to become a doctor and return to my rural hometown where medical
+              care is scarce.
             </p>
             <div className="mt-4 flex items-center gap-4">
-              <span className="text-red-600 font-bold text-xl">${amountRaised}</span>
-              <button className="bg-red-600 text-white px-4 py-2 rounded">Support Maria</button>
+              <span className="text-red-600 font-bold text-xl">
+                ${amountRaised}
+              </span>
+              <button className="bg-red-600 text-white px-4 py-2 rounded">
+                Support Maria
+              </button>
             </div>
           </div>
         </div>
@@ -67,7 +77,9 @@ export default function StudentSection() {
               {financialData.map((item, i) => (
                 <div key={i} className="flex justify-between items-center">
                   <span>{item.label}</span>
-                  <span className="font-semibold">${item.amount.toLocaleString()}</span>
+                  <span className="font-semibold">
+                    ${item.amount.toLocaleString()}
+                  </span>
                 </div>
               ))}
             </div>
@@ -75,8 +87,16 @@ export default function StudentSection() {
 
           {activeTab === "authenticity" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {["ID Verification", "University Enrollment", "Merit Certificate", "Service Record"].map((label) => (
-                <div key={label} className="flex justify-between items-center p-3 border rounded">
+              {[
+                "ID Verification",
+                "University Enrollment",
+                "Merit Certificate",
+                "Service Record",
+              ].map((label) => (
+                <div
+                  key={label}
+                  className="flex justify-between items-center p-3 border rounded"
+                >
                   <span>{label}</span>
                   <span className="text-green-500">✔</span>
                 </div>
@@ -86,13 +106,17 @@ export default function StudentSection() {
 
           {activeTab === "goals & updates" && (
             <div>
-              <div className="bg-gray-100 p-4 rounded mb-4 text-center text-sm">Video player placeholder</div>
+              <div className="bg-gray-100 p-4 rounded mb-4 text-center text-sm">
+                Video player placeholder
+              </div>
               <div className="text-sm text-gray-700 space-y-2">
                 <p>
-                  <strong>2025-01-05:</strong> Completed my clinical rotation in pediatrics with honors.
+                  <strong>2025-01-05:</strong> Completed my clinical rotation in
+                  pediatrics with honors.
                 </p>
                 <p>
-                  <strong>2025-01-03:</strong> Participated in a mission to provide medical care in the Amazon region.
+                  <strong>2025-01-03:</strong> Participated in a mission to
+                  provide medical care in the Amazon region.
                 </p>
               </div>
             </div>

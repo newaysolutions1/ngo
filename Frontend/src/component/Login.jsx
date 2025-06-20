@@ -1,17 +1,16 @@
-// src/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, Shield } from "lucide-react";
 
 const EMAIL = "admin@example.com";
-const PASS  = "123";
+const PASS = "123";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
   const [err, setErr] = useState("");
-  const nav   = useNavigate();
+  const nav = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,7 +37,10 @@ export default function Login() {
         </h1>
 
         <div className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={18} />
+          <Mail
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70"
+            size={18}
+          />
           <input
             type="email"
             placeholder="Email"
@@ -49,7 +51,10 @@ export default function Login() {
           />
         </div>
         <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={18} />
+          <Lock
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70"
+            size={18}
+          />
           <input
             type={show ? "text" : "password"}
             placeholder="Password"
