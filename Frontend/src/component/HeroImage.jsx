@@ -1,11 +1,14 @@
-
+// components/HeroWithImage.jsx
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import VanillaTilt from "vanilla-tilt";
 
+/***********************************
+ *  Helpers – animation variants
+ ***********************************/
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i = 0) => ({
@@ -14,25 +17,59 @@ const fadeUp = {
     transition: { delay: i * 0.08, duration: 0.6, ease: "easeOut" },
   }),
 };
-
-const modalBackdrop = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-  exit:   { opacity: 0 },
-};
-
+const modalBackdrop = { hidden: { opacity: 0 }, visible: { opacity: 1 }, exit: { opacity: 0 } };
 const modalContent = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: { opacity: 1, scale: 1, transition: { duration: 0.35 } },
   exit: { opacity: 0, scale: 0.8, transition: { duration: 0.25 } },
 };
 
+/***********************************
+ *  TiltBox – wrapper that adds the
+ *  emerald rim + tilt behaviour
+ ***********************************/
+function TiltBox({ className = "", children, bg = "transparent" }) {
+  const boxRef = useRef(null);
+  useEffect(() => {
+    if (!boxRef.current) return;
+    VanillaTilt.init(boxRef.current, {
+      max: 10,
+      speed: 500,
+      perspective: 1800,
+      glare: true,
+      "max-glare": 0.1,
+      scale: 1.03,
+    });
+    return () => boxRef.current?.vanillaTilt?.destroy();
+  }, []);
+
+  return (
+    <div
+      ref={boxRef}
+      data-tilt
+      className={`relative will-change-transform rounded-[30px] overflow-hidden cursor-grab shadow-[0_0_0_2px_rgba(0,210,132,0.45),0_0_25px_8px_rgba(0,210,132,0.2)] ${className}`}
+      style={{ background: bg }}
+    >
+      {/* inner emerald rim */}
+      <div className="pointer-events-none absolute inset-3 rounded-[26px] border border-[rgba(0,210,132,0.25)]"></div>
+      {/* gradient overlay (dark bottom)*/}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+      {/* actual content */}
+      <div className="relative z-10 h-full w-full flex flex-col">{children}</div>
+    </div>
+  );
+}
+
+/***********************************
+ *  Main Hero Component
+ ***********************************/
 export default function HeroWithImage() {
   const [open, setOpen] = useState(false);
-  const toggleModal = () => setOpen(!open);
+  const toggleModal = () => setOpen((o) => !o);
 
   return (
     <section className="flex flex-col items-center text-center px-4 py-16 relative">
+      {/* ────────────────── Modal ────────────────── */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -54,11 +91,9 @@ export default function HeroWithImage() {
               <button
                 onClick={toggleModal}
                 className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none"
-                aria-label="Close Modal"
               >
                 <X size={24} />
               </button>
-
               <h3 className="text-xl font-semibold mb-4">Donate</h3>
               <form
                 onSubmit={(e) => {
@@ -73,8 +108,8 @@ export default function HeroWithImage() {
                   { id: "name", type: "text", label: "Name" },
                   { id: "email", type: "email", label: "Email ID" },
                   { id: "phone", type: "tel", label: "Phone Number" },
-                ].map(({ id, type, label }, idx) => (
-                  <div key={idx} className="flex flex-col gap-1">
+                ].map(({ id, type, label }) => (
+                  <div key={id} className="flex flex-col gap-1">
                     <label htmlFor={id} className="text-sm font-medium text-gray-700">
                       {label}
                     </label>
@@ -83,23 +118,15 @@ export default function HeroWithImage() {
                       type={type}
                       placeholder={label}
                       required
-                      className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-gray-800 outline-none"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:ring-2 focus:ring-gray-800"
                     />
                   </div>
                 ))}
-
                 <div className="flex justify-end gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={toggleModal}
-                    className="rounded-md bg-gray-200 px-4 py-2 text-sm hover:bg-gray-300"
-                  >
+                  <button type="button" onClick={toggleModal} className="rounded-md bg-gray-200 px-4 py-2 text-sm hover:bg-gray-300">
                     Cancel
                   </button>
-                  <button
-                    type="submit"
-                    className="rounded-md bg-[#00533F] px-4 py-2 text-sm text-white hover:bg-[#00432c]"
-                  >
+                  <button type="submit" className="rounded-md bg-[#00533F] px-4 py-2 text-sm text-white hover:bg-[#00432c]">
                     Submit
                   </button>
                 </div>
@@ -109,12 +136,8 @@ export default function HeroWithImage() {
         )}
       </AnimatePresence>
 
-      <motion.div
-        className="max-w-3xl"
-        variants={fadeUp}
-        initial="hidden"
-        animate="visible"
-      >
+      {/* ────────────────── Heading ────────────────── */}
+      <motion.div variants={fadeUp} initial="hidden" animate="visible" className="max-w-3xl">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight">
           Great futures are built
           <br className="hidden sm:block" />
@@ -122,119 +145,83 @@ export default function HeroWithImage() {
         </h1>
         <p className="mt-4 text-gray-600 text-base sm:text-lg">
           The world’s largest social fundraising platform,
-          <br className="hidden sm:block" />
-          optimized for your charity in a more easy way
+          <br className="hidden sm:block" /> optimized for your charity in a more easy way
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <button
-            onClick={toggleModal}
-            className="rounded-full bg-gray-900 text-white px-6 py-3 text-sm sm:text-base font-medium shadow-md transition hover:bg-gray-800"
-          >
+          <button onClick={toggleModal} className="rounded-full bg-[#00D284] text-white px-6 py-3 text-sm sm:text-base font-medium shadow-md transition hover:bg-[#009b66]">
             Donate now
           </button>
         </div>
       </motion.div>
+
+      {/* ────────────────── Tilt Grid ────────────────── */}
       <div className="w-full max-w-screen-2xl mx-auto mt-16">
         <motion.div
-          className="
-            flex flex-col gap-8 sm:gap-10 lg:grid lg:grid-cols-5 lg:gap-12 xl:gap-4
-            px-2 sm:px-4 lg:px-0
-          "
+          className="flex flex-col gap-8 sm:gap-10 lg:grid lg:grid-cols-5 lg:gap-12 xl:gap-4 px-2 sm:px-4 lg:px-0"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          <motion.div
-            custom={0}
-            variants={fadeUp}
-            className="flex flex-col gap-4 w-full lg:w-auto"
-          >
-           <div className="flex flex-col gap-4 w-full lg:w-auto">
-            <div className="flex flex-col justify-between w-full h-72 sm:h-80 md:h-96 rounded-[30px] p-6 bg-[#00533F] text-white shadow-xl">
+          {/* ==== 1. Big Donate Card ==== */}
+          <motion.div custom={0} variants={fadeUp} className="flex flex-col gap-4">
+            <TiltBox className="flex flex-col justify-between h-72 sm:h-80 md:h-96 p-6 bg-[#00533F] text-black">
               <div>
-                <p className="text-3xl font-semibold text-start">65%</p>
+                <p className="text-3xl font-semibold text-start sm:mt-18">65%</p>
                 <p className="mt-4 text-base leading-snug text-start">
-                  17 Thousand People Died,
-                  <br />
-                  Thousand Injured, Houses and Buildings Destroyed.
+                  17 Thousand People Died,
+                  <br /> Thousand Injured, Houses and Buildings Destroyed.
                   Turkey‑Syria Grieves
                 </p>
               </div>
-              <button
-                onClick={toggleModal}
-                className="inline-flex items-center self-start rounded-full bg-[#00D1B2] px-6 sm:px-10 py-3 text-sm font-medium text-[#00533F] transition hover:bg-[#00b499] mt-2"
-              >
+              <button onClick={toggleModal} className="inline-flex items-center self-start rounded-full bg-[#00D284] px-6 sm:px-10 py-3 text-sm font-medium text-white transition hover:bg-[#009b66] mt-2">
                 Donate&nbsp;now <ArrowUpRight size={16} />
               </button>
-            </div>
-            <div className="flex items-center justify-center w-full h-14 rounded-[30px] bg-[#0A0F2C] text-white shadow-xl">
-              <span className="text-sm font-medium">Let&nbsp;them be heard</span>
-            </div>
-          </div>
+            </TiltBox>
+            <TiltBox className="flex items-center justify-center h-14 bg-[#0A0F2C] text-black">
+              <span className="text-lg mt-4 font-medium">Let&nbsp;them be heard</span>
+            </TiltBox>
           </motion.div>
-          <motion.div
-            custom={1}
-            variants={fadeUp}
-            className="relative overflow-hidden rounded-[30px] w-full h-72 sm:h-80 md:h-96"
-          >
-              <div className="relative overflow-hidden rounded-[30px] w-full h-72 sm:h-80 md:h-96">
-            <img
-              src="/images/img5.jpg"
-              alt="Health Campaign"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40" />
-            <div className="relative flex h-full flex-col justify-between p-6 text-white">
-              <h3 className="text-lg font-semibold text-start">Health</h3>
-              <p className="text-base leading-snug text-start">
-                Life skills for 2 587 children in South Africa
+
+          {/* ==== 2. Health image card ==== */}
+          <motion.div custom={1} variants={fadeUp}>
+            <TiltBox className="relative h-72 sm:h-80 md:h-96 sm:mt-18">
+              <img src="/images/img5.jpg" alt="Health Campaign" className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-black/40" />
+              <div className="relative flex h-full flex-col justify-between p-6 text-white">
+                <h3 className="text-lg font-semibold text-start">Health</h3>
+                <p className="text-base leading-snug text-start">Life skills for 2 587 children in South Africa</p>
+              </div>
+            </TiltBox>
+          </motion.div>
+
+          {/* ==== 3. Join community box ==== */}
+          <motion.div custom={2} variants={fadeUp}>
+            <TiltBox className="flex flex-col items-center justify-center h-48 bg-[#E1E5EE] text-center p-6 sm:mt-66">
+              <p className="text-lg font-semibold text-[#0A0F2C] sm:mt-10">
+                Join 5 000+
+                <br /> People Donate
               </p>
-            </div>
-          </div>
+              <button className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#00D284] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#009b66] sm:mt-12">
+                Join&nbsp;community <ArrowUpRight size={16} />
+                         </button>
+            </TiltBox>
           </motion.div>
-          <motion.div
-            custom={2}
-            variants={fadeUp}
-            className=""
-          >
-                 <div className="flex flex-col items-center justify-center shrink-0 w-full sm:w-[240px] md:w-[260px] lg:w-auto h-48 rounded-[30px] p-6 text-center bg-[#E1E5EE] shadow-xl  sm:mt-48">
-            <p className="text-lg font-semibold text-[#0A0F2C]">
-              Join 5 000+
-              <br />
-              People Donate
-            </p>
-            <button className="mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-[#0A0F2C] shadow transition hover:bg-[#f7f8fa]">
-              Join&nbsp;community <ArrowUpRight size={16} />
-            </button>
-          </div>
+
+          {/* ==== 4. Education image card ==== */}
+          <motion.div custom={3} variants={fadeUp}>
+            <TiltBox className="relative h-72 sm:h-80 md:h-96 sm:mt-18">
+              <img src="/images/img6.jpg" alt="Education Campaign" className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-black/40" />
+              <div className="relative flex h-full flex-col justify-between p-6 text-white">
+                <h3 className="text-lg font-semibold text-start">Education</h3>
+                <p className="text-base leading-snug text-start">Sponsor food & education for orphans in India</p>
+              </div>
+            </TiltBox>
           </motion.div>
-          <motion.div
-            custom={3}
-            variants={fadeUp}
-            className="relative overflow-hidden rounded-[30px] w-full h-72 sm:h-80 md:h-96"
-          >
-               <div className="relative overflow-hidden rounded-[30px] w-full h-72 sm:h-80 md:h-96">
-            <img
-              src="/images/img6.jpg"
-              alt="Education Campaign"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40" />
-            <div className="relative flex h-full flex-col justify-between p-6 text-white">
-              <h3 className="text-lg font-semibold text-start">Education</h3>
-              <p className="text-base leading-snug text-start">
-                Sponsor food &amp; education for orphans in India
-              </p>
-            </div>
-          </div>
-          </motion.div>
-          <motion.div
-            custom={4}
-            variants={fadeUp}
-            className="flex flex-col gap-4 w-full lg:w-auto"
-          >
-                <div className="flex flex-col gap-4 w-full lg:w-auto">
-            <div className="relative overflow-hidden rounded-[30px] w-full h-72 sm:h-80 md:h-96 shadow-xl">
+
+          {/* ==== 5. Explore now image card ==== */}
+          <motion.div custom={4} variants={fadeUp} className="flex flex-col gap-4">
+            <TiltBox className="relative h-72 sm:h-80 md:h-96 ">
               <img
                 src="https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=600&q=60"
                 alt="Explore Now"
@@ -244,19 +231,19 @@ export default function HeroWithImage() {
               <div className="relative flex h-full flex-col justify-between p-6">
                 <div />
                 <Link to="/education">
-                  <button className="inline-flex items-center self-start rounded-full bg-[#00D1B2] px-6 sm:px-10 py-3 text-sm font-medium text-[#00533F] transition hover:bg-[#00b499]">
+                  <button className="inline-flex items-center self-start rounded-full bg-[#00D284] px-6 sm:px-10 py-3 text-sm font-medium text-white transition hover:bg-[#009b66]">
                     Explore&nbsp;now <ArrowUpRight size={16} />
                   </button>
                 </Link>
               </div>
-            </div>
-            <div className="flex items-center justify-center w-full h-14 rounded-[30px] bg-[#0A0F2C] text-white shadow-xl">
-              <span className="text-sm font-medium">Your home for help</span>
-            </div>
-          </div>
+            </TiltBox>
+            <TiltBox className="flex items-center justify-center h-14 bg-[#0A0F2C] text-black">
+              <span className="text-lg mt-4 font-medium">Your home for help</span>
+            </TiltBox>
           </motion.div>
         </motion.div>
       </div>
     </section>
   );
 }
+

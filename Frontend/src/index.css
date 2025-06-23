@@ -21,6 +21,46 @@
     overflow-x: hidden;
   } */
   /* index.css */
+  /* --- Swiper core styles --- */
+/* ─── Swiper core styles ─── */
+@import "swiper/css";
+@import "swiper/css/autoplay";
+
+/* Reset transforms on every image */
+.mySwiper .swiper-slide img {
+  transform: none;
+}
+
+/* Slow 360° keyframes */
+@keyframes spin360 {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes kenBurns {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+.ken-burns {
+  animation: kenBurns 20s ease-in-out infinite alternate;
+}
+
+/* Apply the spin ONLY to the active slide on ≥ 768 px  */
+@media (min-width: 768px) {
+  .mySwiper .swiper-slide-active img {
+    animation: spin360 12s linear infinite;
+  }
+}
+
+/*   ▸  Remove the media‑query block above if you also
+      want the images spinning on phones/tablets. */
+
+
 
 body {
   font-family: 'Raleway', 'Playfair Display', serif;
@@ -38,6 +78,34 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
     line-height: 1.6;
     overflow-x: hidden;
+}
+/* HOLOGRAPHIC‑ON‑HOVER 🔮 */
+.holo {
+  position: relative;
+  overflow: hidden;
+}
+
+.holo::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  /* conic‑gradient से इंद्रधनुष‑जैसी शीन */
+  background: conic-gradient(
+    from 0deg,
+    #ff00ff,
+    #00e5ff,
+    #ffff00,
+    #ff00ff
+  );
+  filter: blur(60px);
+  opacity: 0;                 /* default invisible */
+  transition: opacity 0.6s ease, transform 2s linear;
+  pointer-events: none;       /* click बाधित न हो */
+}
+
+.holo:hover::before {
+  opacity: 0.55;              /* जितनी चमक चाहिए adjust करें */
+  transform: rotate(360deg);  /* घूमता हुआ ग्लो – optional */
 }
 
   /* Loader Styles */

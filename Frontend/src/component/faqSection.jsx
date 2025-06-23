@@ -3,20 +3,28 @@ import { FiPlus, FiMinus } from "react-icons/fi";
 
 const faqData = [
   {
-    q: "Is there free trial available?",
-    a: "Absolutely! Our free trial offers you the perfect opportunity to explore all the features and benefits of our product at no cost. Don’t miss out on this chance to see how it can transform your experience!",
+    q: "How can I become a volunteer or donor?",
+    a: "You can register via the “Join Us” section on their website by filling out the form with your name, email, phone number, availability, and selecting whether you’re a donor, volunteer, or both. This helps Ek Zaria contact you when relevant needs arise",
   },
   {
-    q: "What features are included in the free trial?",
-    a: "",
+    q: "What services or support does Ek Zaria provide?",
+    a: " Ek Zaria connects people in need—especially students and patients—with volunteers or donors who can provide:Medical assistance (camps, checkups, medicine)",
   },
   {
-    q: "What features are included in the free trial?",
-    a: "",
+    q: "Who founded Ek Zaria and when was it established?",
+    a: " The initiative was founded by Anmol Kwatra, Started the NGO 10 years ago, functioning as a not-for-profit entity in Ludhiana",
   },
   {
-    q: "Is there a limit to the duration of the free trial?",
-    a: "",
+    q: "Why is it called a “cashless” NGO?",
+    a: " Ek Zaria doesn't accept cash or physical donations. Instead, it facilitates support by pairing beneficiaries with donors/volunteers who provide direct help—whether in the form of services, goods, or assistance—ensuring complete transparency and no financial mismanagement",
+  },
+  {
+    q: "What is Ek Zaria?",
+    a: "  Ek Zaria is the world’s first “cashless” NGO based in Ludhiana, Punjab, founded by Anmol Kwatra. It acts as an intermediary, connecting underprivileged individuals—particularly patients and students—to donors and volunteers, without directly handling money or material resources",
+  },
+  {
+    q: "How many people has Ek Zaria helped so far?",
+    a: " We’ve helped over 100,000 underprivileged patients and people, though no official audited figure is cited",
   },
 ];
 
@@ -34,30 +42,37 @@ export default function FaqSection() {
         </p>
 
         {faqData.map((item, idx) => {
-          const isOpen = idx === open;
-          return (
-            <div key={idx} className="border-b last:border-none">
-              <button
-                className="w-full flex items-center justify-between gap-4 py-4 text-start"
-                onClick={() => setOpen(isOpen ? -1 : idx)}
-              >
-                <span className="font-semibold text-lg sm:text-xl">
-                  {item.q}
-                </span>
-                {isOpen ? (
-                  <FiMinus className="shrink-0 text-xl" />
-                ) : (
-                  <FiPlus className="shrink-0 text-xl" />
-                )}
-              </button>
-              {isOpen && item.a && (
-                <p className="pb-4 text-sm sm:text-base text-gray-700 leading-relaxed">
-                  {item.a}
-                </p>
-              )}
-            </div>
-          );
-        })}
+  const isOpen = idx === open;
+  return (
+    <div key={idx} className="border-b last:border-none">
+      <button
+        className="w-full flex items-center justify-between gap-4 py-4 text-start"
+        onClick={() => setOpen(isOpen ? -1 : idx)}
+      >
+        <span className="font-semibold text-lg sm:text-xl">{item.q}</span>
+        <span
+          className={`transition-all duration-300 ease-in-out rounded-full border-2 p-1.5 ${
+            isOpen
+              ? "rotate-180  bg-gray-200 text-gray-600 border-gray-300"
+              : "bg-gray-200 text-gray-600 border-gray-300"
+          }`}
+        >
+          {isOpen ? (
+            <FiMinus className="text-xl transition-transform duration-300" />
+          ) : (
+            <FiPlus className="text-xl transition-transform duration-300" />
+          )}
+        </span>
+      </button>
+      {isOpen && item.a && (
+        <p className="pb-4 text-sm sm:text-base text-gray-700 leading-relaxed">
+          {item.a}
+        </p>
+      )}
+    </div>
+  );
+})}
+
       </div>
     </section>
   );

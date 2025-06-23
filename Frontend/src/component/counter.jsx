@@ -20,14 +20,10 @@ export default function StatsBar() {
           <div
             key={idx}
             className={`bg-[#064C3A] text-white px-4 py-5 rounded-xl text-center shadow-md
-                        w-36 sm:w-auto
-                        ${
-                          idx === stats.length - 1
-                            ? "col-span-2 w-3/4 mx-auto"
-                            : ""
-                        }`}
-          >
-            <p className="text-3xl sm:text-4xl font-bold leading-tight">
+          w-36 sm:w-auto
+            ${idx === stats.length - 1 ? "col-span-2 w-full" : ""}`}
+>
+            <p className="text-2xl sm:text-4xl font-bold leading-tight">
               {inView ? (
                 <CountUp end={end} duration={2} separator="," suffix={suffix} />
               ) : (

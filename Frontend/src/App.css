@@ -41,6 +41,46 @@
   color: #888;
 } */
 /* Global Styles */
+/* --- Swiper core styles --- */
+/* ─── Swiper core styles ─── */
+@import "swiper/css";
+@import "swiper/css/autoplay";
+
+/* Reset transforms on every image */
+.mySwiper .swiper-slide img {
+  transform: none;
+}
+
+/* Slow 360° keyframes */
+@keyframes spin360 {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Apply the spin ONLY to the active slide on ≥ 768 px  */
+@media (min-width: 768px) {
+  .mySwiper .swiper-slide-active img {
+    animation: spin360 12s linear infinite;
+  }
+}
+@keyframes kenBurns {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+.ken-burns {
+  animation: kenBurns 20s ease-in-out infinite alternate;
+}
+
+/*   ▸  Remove the media‑query block above if you also
+      want the images spinning on phones/tablets. */
+
+
 :root {
   --primary-color: #0077ff;
   --secondary-color: #222;

@@ -1,18 +1,14 @@
 "use client";
-import { useState, Fragment } from "react";
+import { useState, Fragment, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { X } from "lucide-react";
-import {
-  Pagination,
-  A11y,
-  Autoplay,
-  FreeMode,
-  Mousewheel,
-  Keyboard,
-} from "swiper/modules";
+import { X, PlayCircle } from "lucide-react";
+import { Autoplay, FreeMode } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { useInView } from "react-intersection-observer";
+import { motion } from "framer-motion";
+import TiltCard from "./TiltCard";
 
 const PATIENTS = [
   {
@@ -80,181 +76,159 @@ export default function CaseStudies() {
   const [open, setOpen] = useState(null);
   const [donateOpen, setDonateOpen] = useState(false);
 
+
+  const swiperRef = useRef(null);
+  const [introDone, setIntroDone] = useState(false);
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
+  const handleIntroComplete = () => {
+    setIntroDone(true);
+    if (swiperRef.current) swiperRef.current.autoplay.start();
+  };
+
   return (
-    <div className=" mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto px-4 sm:px-6 lg:px-8">
       {donateOpen && (
-        <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
-          onClick={() => setDonateOpen(false)}
-        >
-          <div
-            className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setDonateOpen(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800"
-            >
-              <X size={24} />
-            </button>
+  <div
+    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4"
+    onClick={() => setDonateOpen(false)}  
+  >
+  
+    <div
+      onClick={(e) => e.stopPropagation()} 
+      className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+    >
 
-            <h3 className="text-xl font-semibold mb-4">Donate</h3>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert("Thank you for your contribution!");
-                setDonateOpen(false);
-              }}
-              className="space-y-4"
-            >
-              <input
-                type="number"
-                placeholder="Amount (₹)"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2
-                           focus:ring-2 focus:ring-gray-800 outline-none"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Name"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2
-                           focus:ring-2 focus:ring-gray-800 outline-none"
-                required
-              />
-              <input
-                type="email"
-                placeholder="Email ID"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2
-                           focus:ring-2 focus:ring-gray-800 outline-none"
-                required
-              />
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2
-                           focus:ring-2 focus:ring-gray-800 outline-none"
-                required
-              />
+      <button
+        onClick={() => setDonateOpen(false)}
+        className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none"
+      >
+        <X size={24} />
+      </button>
 
-              <div className="flex justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setDonateOpen(false)}
-                  className="rounded-md bg-gray-200 px-4 py-2 text-sm hover:bg-gray-300"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="rounded-md bg-[#00533F] px-4 py-2 text-sm text-white hover:bg-[#00432c]"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-      <h1 className="text-center text-3xl sm:text-4xl lg:text-5xl font-semibold mb-8 mt-24">
-        Our Case Studies
-      </h1>
-      <Swiper
-       modules={[Autoplay, FreeMode]}
-       loop
-       centeredSlides
-       freeMode
-       grabCursor
-       speed={1500}
-       autoplay={{ delay: 10, disableOnInteraction: false }}
-        breakpoints={{
-          320:  { slidesPerView: 1.2,   spaceBetween: 20 },
-          640:  { slidesPerView: 1.5, spaceBetween: 30 },
-          768:  { slidesPerView: 2,   spaceBetween: 40 },
-          1024: { slidesPerView: 2.5, spaceBetween: 60 },
-          1280: { slidesPerView: 3,   spaceBetween: 80 },
-          1536: { slidesPerView: 3.5, spaceBetween: 100 },
+      <h3 className="mb-4 text-xl font-semibold">Donate</h3>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          alert("Thank you for your contribution!");
+          setDonateOpen(false);
         }}
-        className="px-4 sm:px-6 md:px-8"
+        className="grid gap-y-4 gap-x-6 sm:grid-cols-[auto_1fr]"
+      >
+        {/* Amount */}
+        <label htmlFor="amount" className="self-center text-sm font-medium text-gray-700">
+          Amount&nbsp;(₹)
+        </label>
+        <input
+          id="amount"
+          type="number"
+          required
+          placeholder="Amount (₹)"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:ring-2 focus:ring-gray-800"
+        />
+
+    
+        <label htmlFor="name" className="self-center text-sm font-medium text-gray-700">
+          Name
+        </label>
+        <input
+          id="name"
+          type="text"
+          required
+          placeholder="Name"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:ring-2 focus:ring-gray-800"
+        />
+
+  
+        <label htmlFor="email" className="self-center text-sm font-medium text-gray-700">
+          Email&nbsp;ID
+        </label>
+        <input
+          id="email"
+          type="email"
+          required
+          placeholder="Email ID"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:ring-2 focus:ring-gray-800"
+        />
+
+
+        <label htmlFor="phone" className="self-center text-sm font-medium text-gray-700">
+          Phone&nbsp;Number
+        </label>
+        <input
+          id="phone"
+          type="tel"
+          required
+          placeholder="Phone Number"
+          className="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:ring-2 focus:ring-gray-800"
+        />
+
+  
+        <div className="col-span-full mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={() => setDonateOpen(false)}
+            className="rounded-md bg-gray-200 px-4 py-2 text-sm hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="rounded-md bg-[#00533F] px-4 py-2 text-sm text-white hover:bg-[#00432c]"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
+
+      {/* ───── Section Heading ───── */}
+      <div className="py-20 px-4 sm:px-6 lg:px-12">
+      <h1 className="text-center text-4xl font-bold mb-10">Our Case Studies</h1>
+      <Swiper
+        modules={[Autoplay, FreeMode]}
+        loop
+        grabCursor
+        freeMode
+        autoplay={{ delay: 1800, disableOnInteraction: false }}
+        speed={1500}
+        breakpoints={{
+          320: { slidesPerView: 1.2, spaceBetween: 20 },
+          768: { slidesPerView: 2, spaceBetween: 40 },
+          1024: { slidesPerView: 2.5, spaceBetween: 60 },
+          1280: { slidesPerView: 3, spaceBetween: 80 },
+        }}
       >
         {PATIENTS.map((p) => (
-          <SwiperSlide key={p.id}
-          className="transition-transform duration-700 ease-out"
-         >
-            <div className="bg-gray-300 h-[26rem] sm:h-[24rem] md:h-[28rem] lg:h-[32rem] xl:h-[34rem] rounded-3xl shadow-lg overflow-hidden">
-              <div className="relative w-full h-full rounded-3xl overflow-hidden">
-                <img
-                  src={p.image}
-                  alt={p.name}
-                  className="w-full h-full object-cover blur-sm scale-110"
-                />
-                <div className="absolute inset-0 flex flex-col items-center justify-end text-center gap-4 px-4 mb-8">
-                  <h3 className="text-white text-xl sm:text-2xl font-semibold drop-shadow-sm">
-                    {p.name}
-                  </h3>
-                  <button
-                    onClick={() => setOpen(p)}
-                    className="px-6 py-2 bg-white text-gray-900 text-base sm:text-lg font-medium rounded-xl backdrop-blur-sm transition hover:scale-105"
-                  >
-                    Read more
-                  </button>
-                </div>
-              </div>
-            </div>
+          <SwiperSlide key={p.id}>
+            <TiltCard
+              bg={p.image}
+              title={p.name}
+              subtitle={`${p.age} yrs `}
+              // badge={p.expense}
+              onTour={() => setOpen(p)}
+            />
           </SwiperSlide>
-          
         ))}
-        <style jsx>{`
-        .swiper-slide {
-          will-change: transform;
-        }
-
-        /* Active: slightly larger & full opacity */
-        .swiper-slide-active {
-          transform: scale(1);
-          opacity: 1;
-        }
-
-        /* Neighbours: subtle shrink & fade */
-        .swiper-slide-next,
-        .swiper-slide-prev {
-          transform: scale(0.92);
-          opacity: 0.85;
-        }
-        .swiper-slide:not(.swiper-slide-active):not(.swiper-slide-next):not(.swiper-slide-prev) {
-          transform: scale(0.85);
-          opacity: 0.6;
-        }
-      `}</style>
       </Swiper>
+    </div>
+
+      {/* Story Modal */}
       {open && (
         <Fragment>
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-            onClick={() => setOpen(null)}
-          />
-          <div
-            role="dialog"
-            aria-modal="true"
-            tabIndex={-1}
-            onKeyDown={(e) => e.key === "Escape" && setOpen(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          >
-            <div
-              className="relative bg-white rounded-3xl shadow-2xl w-full max-w-3xl
-                         h-[88vh] sm:h-[80vh] flex flex-col overflow-hidden"
-            >
-              <section className="flex flex-col lg:flex-row gap-6 p-6 lg:p-8 flex-none">
-                <div className="border border-black/10 border-2xl rounded-md ">
-                  <img
-                    src={open.image}
-                    alt={open.name}
-                    className="w-full lg:w-full h-52 sm:h-60 lg:h-72 object-cover blur-sm scale-97 rounded-xl"
-                  />
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setOpen(null)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-3xl h-[88vh] flex flex-col overflow-hidden">
+              <section className="flex flex-col lg:flex-row gap-8 p-8">
+                <div className="lg:w-[40%] w-full border border-black/10 rounded-md">
+                  <img src={open.image} alt={open.name} className="w-full h-60 lg:h-72 object-cover blur-sm rounded-xl" />
                 </div>
-                <div className="flex-1 space-y-6">
-                  <h2 className="text-2xl sm:text-3xl font-bold">
-                    {open.name}
-                  </h2>
+                <div className="lg:w-[60%] w-full space-y-10">
+                  <h2 className="text-2xl font-bold">{open.name}</h2>
                   <dl className="grid grid-cols-[auto_1fr] gap-x-10 gap-y-4 text-gray-700">
                     <dt className="font-semibold">Age:</dt>
                     <dd>{open.age}</dd>
@@ -265,32 +239,26 @@ export default function CaseStudies() {
                   </dl>
                 </div>
               </section>
-              <section className="flex-1 overflow-y-auto px-6 lg:px-8 pb-8">
-                <p className="text-center text-xl sm:text-2xl font-semibold mb-3">
-                  Story
-                </p>
-                <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                  {open.story}
-                </p>
-
+              <section className="flex-1 overflow-y-auto px-6 pb-8">
+                <p className="text-center text-xl font-semibold mb-3">Story</p>
+                <p className="text-gray-600 leading-relaxed whitespace-pre-line">{open.story}</p>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4 mt-10">
-                  <span className="text-lg sm:text-xl">Email us to donate</span>
+                  <span className="text-lg">Email us to donate</span>
                   <button
                     type="button"
                     onClick={() => setDonateOpen(true)}
-                    className="px-8 py-2 bg-black text-white rounded-xl hover:bg-opacity-80 transition"
+                    className="px-8 py-2 bg-[#00533F] text-white rounded-xl hover:bg-opacity-80"
                   >
                     Donate
                   </button>
                 </div>
+                <div className="mt-4 flex h-48 items-center justify-center rounded-md bg-gray-100">
+                  <PlayCircle className="h-16 w-16 text-gray-400" />
+                </div>
               </section>
               <button
-                aria-label="Close"
                 onClick={() => setOpen(null)}
-                className="absolute top-0 right-0
-                           flex h-10 w-10 items-center justify-center
-                           text-2xl text-gray-500 hover:text-black
-                           rounded-full hover:bg-gray-100 transition"
+                className="absolute top-2 right-3 text-2xl text-gray-500 hover:text-black rounded-full hover:bg-gray-100"
               >
                 ×
               </button>
