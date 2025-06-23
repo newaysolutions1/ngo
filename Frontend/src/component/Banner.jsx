@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-
 /* ── image data ─────────────────────────────────────────────────── */
 const columns = [
   { img: "/images/c1.png", height: "lg:h-[1000px]" },  // height applies only ≥ lg
@@ -51,12 +50,12 @@ export default function Banner() {
       {/* ── slogan + CTA (flows normally on mobile, absolute on lg) ── */}
       <div className="relative z-10 mt-10 flex flex-col items-start gap-6 px-6 text-white
                       sm:px-8 md:px-12
-                      lg:absolute lg:-bottom-10 lg:left-4 lg:mt-0 lg:flex-row lg:items-center lg:gap-8">
+                      lg:absolute lg:-bottom-0 lg:left-4 lg:mt-0 lg:flex-row lg:items-center lg:gap-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-light leading-tight">
           HEALING LIVES,<br />POWERED<br />BY YOU
         </h1>
 
-        <button className="group relative rounded-xl p-[6px] bg-gradient-to-r from-[#00D1B2] to-[#2AFF7D]">
+        <button className="group relative rounded-xl p-[6px] bg-bg-[#0A0F2C]">
           <span className="flex h-12 w-40 items-center justify-center rounded-full bg-[#0A0F2C]
                            text-base sm:text-lg font-medium transition group-hover:translate-x-1">
             Join&nbsp;Us
@@ -67,12 +66,14 @@ export default function Banner() {
       {/* ── brand lock-up (flows on mobile, absolute on lg) ───────── */}
       <div className="relative z-10 mt-8 flex items-center gap-6 px-6 text-white
                       sm:px-8 md:px-12
-                      lg:absolute lg:-bottom-10 lg:right-4 lg:mt-0 lg:gap-6">
+                      lg:absolute lg:-bottom-0 lg:right-4 lg:mt-0 lg:gap-6">
+                    
         <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light leading-tight">
           EKZARIA&nbsp;<br />NGO
         </h2>
-
-        <button className="group relative rounded-full p-[2px] bg-gradient-to-r from-[#00D1B2] to-[#2AFF7D]">
+       
+        <a href="/education">
+        <button className="group relative rounded-full p-[2px] bg-[#0A0F2C]">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#0A0F2C]
                            transition-transform group-hover:translate-x-1">
             <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 stroke-white">
@@ -80,6 +81,7 @@ export default function Banner() {
             </svg>
           </span>
         </button>
+        </a>
       </div>
     </section>
   );

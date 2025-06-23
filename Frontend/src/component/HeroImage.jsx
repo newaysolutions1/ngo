@@ -1,14 +1,12 @@
-// components/HeroWithImage.jsx
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import VanillaTilt from "vanilla-tilt";
+import axios from "axios";
 
-/***********************************
- *  Helpers – animation variants
- ***********************************/
+/* ───── animation helpers ───── */
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i = 0) => ({
@@ -24,10 +22,7 @@ const modalContent = {
   exit: { opacity: 0, scale: 0.8, transition: { duration: 0.25 } },
 };
 
-/***********************************
- *  TiltBox – wrapper that adds the
- *  emerald rim + tilt behaviour
- ***********************************/
+/* ───── tilt wrapper ───── */
 function TiltBox({ className = "", children, bg = "transparent" }) {
   const boxRef = useRef(null);
   useEffect(() => {
@@ -50,26 +45,118 @@ function TiltBox({ className = "", children, bg = "transparent" }) {
       className={`relative will-change-transform rounded-[30px] overflow-hidden cursor-grab shadow-[0_0_0_2px_rgba(0,210,132,0.45),0_0_25px_8px_rgba(0,210,132,0.2)] ${className}`}
       style={{ background: bg }}
     >
-      {/* inner emerald rim */}
       <div className="pointer-events-none absolute inset-3 rounded-[26px] border border-[rgba(0,210,132,0.25)]"></div>
-      {/* gradient overlay (dark bottom)*/}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-      {/* actual content */}
       <div className="relative z-10 h-full w-full flex flex-col">{children}</div>
     </div>
   );
 }
 
-/***********************************
- *  Main Hero Component
- ***********************************/
+/* ───── Field component lives OUTSIDE DonationForm ───── */
+function Field({ id, type, label, placeholder, value, onChange, error, touched }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="text-sm font-medium text-gray-700">
+        {label}
+      </label>
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`w-full rounded-lg border px-4 py-2 outline-none focus:ring-2 ${
+          error && touched ? "border-red-400" : "border-gray-300"
+        } focus:ring-gray-800`}
+      />
+      {error && touched && <span className="text-sm text-red-500">{error}</span>}
+    </div>
+  );
+}
+
+/* ───── donation form ───── */
+function DonationForm({ onSuccess, onCancel }) {
+  const [values, setValues] = useState({ amount: "", name: "", email: "", phone: "" });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [touched, setTouched] = useState(false);
+
+  const validate = (v) => {
+    const e = {};
+    if (!v.amount || +v.amount <= 0) e.amount = "Enter an amount > 0";
+    if (!v.name.trim()) e.name = "Name is required";
+    if (!/^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/.test(v.email)) e.email = "Enter a valid email";
+    if (!/^\d{10}$/.test(v.phone)) e.phone = "Enter a 10-digit phone";
+    return e;
+  };
+
+  const handleChange = (e) => {
+    setValues((s) => ({ ...s, [e.target.id]: e.target.value }));
+    if (!touched) setTouched(true);
+    setErrors(validate({ ...values, [e.target.id]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const vErrors = validate(values);
+    setErrors(vErrors);
+    if (Object.keys(vErrors).length) return;
+
+    try {
+      setLoading(true);
+      await axios.post("http://localhost:8000/api/donates", {
+        amount: Number(values.amount),
+        name: values.name.trim(),
+        email: values.email.trim(),
+        phone: values.phone.trim(),
+      });
+      alert("Thank you for your contribution!");
+      setValues({ amount: "", name: "", email: "", phone: "" });
+      onSuccess();
+    } catch (err) {
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 text-left">
+      <Field id="amount" type="number" label="Amount (₹)" placeholder="1000"
+        value={values.amount} onChange={handleChange}
+        error={errors.amount} touched={touched} />
+      <Field id="name" type="text" label="Name" placeholder="John Doe"
+        value={values.name} onChange={handleChange}
+        error={errors.name} touched={touched} />
+      <Field id="email" type="email" label="Email ID" placeholder="john@example.com"
+        value={values.email} onChange={handleChange}
+        error={errors.email} touched={touched} />
+      <Field id="phone" type="tel" label="Phone Number" placeholder="9876543210"
+        value={values.phone} onChange={handleChange}
+        error={errors.phone} touched={touched} />
+
+      <div className="flex justify-end gap-3 pt-2">
+        <button type="button" onClick={onCancel}
+          className="rounded-md bg-gray-200 px-4 py-2 text-sm hover:bg-gray-300">
+          Cancel
+        </button>
+        <button type="submit" disabled={loading}
+          className="rounded-md bg-[#00533F] px-4 py-2 text-sm text-white hover:bg-[#00432c] disabled:opacity-60">
+          {loading ? "Submitting…" : "Submit"}
+        </button>
+      </div>
+    </form>
+  );
+}
+
+/* ───── main hero ───── */
 export default function HeroWithImage() {
   const [open, setOpen] = useState(false);
   const toggleModal = () => setOpen((o) => !o);
 
   return (
     <section className="flex flex-col items-center text-center px-4 py-16 relative">
-      {/* ────────────────── Modal ────────────────── */}
+      {/* modal */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -88,55 +175,18 @@ export default function HeroWithImage() {
               className="relative bg-white rounded-2xl shadow-2xl w-[90%] max-w-md p-6"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                onClick={toggleModal}
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none"
-              >
+              <button onClick={toggleModal}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none">
                 <X size={24} />
               </button>
               <h3 className="text-xl font-semibold mb-4">Donate</h3>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  alert("Thank you for your contribution!");
-                  setOpen(false);
-                }}
-                className="space-y-4 text-left"
-              >
-                {[
-                  { id: "amount", type: "number", label: "Amount (₹)" },
-                  { id: "name", type: "text", label: "Name" },
-                  { id: "email", type: "email", label: "Email ID" },
-                  { id: "phone", type: "tel", label: "Phone Number" },
-                ].map(({ id, type, label }) => (
-                  <div key={id} className="flex flex-col gap-1">
-                    <label htmlFor={id} className="text-sm font-medium text-gray-700">
-                      {label}
-                    </label>
-                    <input
-                      id={id}
-                      type={type}
-                      placeholder={label}
-                      required
-                      className="w-full rounded-lg border border-gray-300 px-4 py-2 outline-none focus:ring-2 focus:ring-gray-800"
-                    />
-                  </div>
-                ))}
-                <div className="flex justify-end gap-3 pt-2">
-                  <button type="button" onClick={toggleModal} className="rounded-md bg-gray-200 px-4 py-2 text-sm hover:bg-gray-300">
-                    Cancel
-                  </button>
-                  <button type="submit" className="rounded-md bg-[#00533F] px-4 py-2 text-sm text-white hover:bg-[#00432c]">
-                    Submit
-                  </button>
-                </div>
-              </form>
+              <DonationForm onSuccess={toggleModal} onCancel={toggleModal} />
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ────────────────── Heading ────────────────── */}
+      {/* ─────── Heading ─────── */}
       <motion.div variants={fadeUp} initial="hidden" animate="visible" className="max-w-3xl">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold leading-tight">
           Great futures are built
@@ -154,7 +204,7 @@ export default function HeroWithImage() {
         </div>
       </motion.div>
 
-      {/* ────────────────── Tilt Grid ────────────────── */}
+      {/* ─────── Tilt Grid ─────── */}
       <div className="w-full max-w-screen-2xl mx-auto mt-16">
         <motion.div
           className="flex flex-col gap-8 sm:gap-10 lg:grid lg:grid-cols-5 lg:gap-12 xl:gap-4 px-2 sm:px-4 lg:px-0"
@@ -162,7 +212,7 @@ export default function HeroWithImage() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {/* ==== 1. Big Donate Card ==== */}
+          {/* Card 1 – Donate */}
           <motion.div custom={0} variants={fadeUp} className="flex flex-col gap-4">
             <TiltBox className="flex flex-col justify-between h-72 sm:h-80 md:h-96 p-6 bg-[#00533F] text-black">
               <div>
@@ -182,7 +232,7 @@ export default function HeroWithImage() {
             </TiltBox>
           </motion.div>
 
-          {/* ==== 2. Health image card ==== */}
+          {/* Card 2 – Health */}
           <motion.div custom={1} variants={fadeUp}>
             <TiltBox className="relative h-72 sm:h-80 md:h-96 sm:mt-18">
               <img src="/images/img5.jpg" alt="Health Campaign" className="absolute inset-0 h-full w-full object-cover" />
@@ -194,7 +244,7 @@ export default function HeroWithImage() {
             </TiltBox>
           </motion.div>
 
-          {/* ==== 3. Join community box ==== */}
+          {/* Card 3 – Join community */}
           <motion.div custom={2} variants={fadeUp}>
             <TiltBox className="flex flex-col items-center justify-center h-48 bg-[#E1E5EE] text-center p-6 sm:mt-66">
               <p className="text-lg font-semibold text-[#0A0F2C] sm:mt-10">
@@ -203,11 +253,11 @@ export default function HeroWithImage() {
               </p>
               <button className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#00D284] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#009b66] sm:mt-12">
                 Join&nbsp;community <ArrowUpRight size={16} />
-                         </button>
+              </button>
             </TiltBox>
           </motion.div>
 
-          {/* ==== 4. Education image card ==== */}
+          {/* Card 4 – Education */}
           <motion.div custom={3} variants={fadeUp}>
             <TiltBox className="relative h-72 sm:h-80 md:h-96 sm:mt-18">
               <img src="/images/img6.jpg" alt="Education Campaign" className="absolute inset-0 h-full w-full object-cover" />
@@ -219,7 +269,7 @@ export default function HeroWithImage() {
             </TiltBox>
           </motion.div>
 
-          {/* ==== 5. Explore now image card ==== */}
+          {/* Card 5 – Explore now */}
           <motion.div custom={4} variants={fadeUp} className="flex flex-col gap-4">
             <TiltBox className="relative h-72 sm:h-80 md:h-96 ">
               <img
@@ -246,4 +296,3 @@ export default function HeroWithImage() {
     </section>
   );
 }
-

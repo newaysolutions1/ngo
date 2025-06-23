@@ -6,10 +6,12 @@ const fs = require('fs');
 const authRoutes = require('./api/user.routes');
 const studentRoutes = require('./api/student.routes');
 const patientRoutes = require('./api/patient.routes');
+const donateRoutes = require('./api/donate.routes')
 
 router.use('/auth', authRoutes);
 router.use('/students', studentRoutes);
 router.use('/patients', patientRoutes);
+router.use('/donates', donateRoutes);
 
 router.get('/download', function (req, res) {
   try {

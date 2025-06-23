@@ -322,7 +322,41 @@ export default function EducationPage() {
           />
         </div>
       </header>
-
+       <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+              viewport={{ once: true }}
+              className="mt-20"
+            >
+              <div className="ml-23 md:ml-20">
+              <h1 className=" text-2xl sm:text-3xl md:text-4xl font-semibold ">
+                About INFO Education Platform
+              </h1>
+              </div>
+      
+              <div className="mx-4 md:mx-12 my-12 rounded-[2rem] shadow-md overflow-hidden bg-white flex flex-col md:flex-row">
+                <div className="w-full md:w-full h-[200px]  md:h-[500px]">
+                  <img
+                    src="/images/image.svg"
+                    alt="Hope in Action"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            </motion.div>
+      <section className="mx-auto mb-8 max-w-8xl px-4 mt-20">
+        <div className="mx-4 rounded-xl shadow-xl overflow-hidden sm:mx-6 lg:hidden">
+          <div className="flex aspect-[9/14] w-full items-center justify-center bg-gray-300">
+            <span className="text-sm text-gray-500">Reel placeholder</span>
+          </div>
+        </div>
+        <div className="hidden overflow-hidden rounded-xl shadow-xl lg:block lg:mx-12">
+          <div className="flex h-[50rem] w-full items-center justify-center bg-gray-300">
+            <span className="text-sm text-gray-500">Video placeholder</span>
+          </div>
+        </div>
+      </section>
       <SupportStudentsSection />
       <FaqSection />
       <Footer />

@@ -36,12 +36,64 @@ const ChartCard = ({ title, children }) => (
   <div className="rounded-xl bg-white p-4 shadow-sm"><h2 className="mb-2 text-sm font-semibold text-gray-700">{title}</h2>{children}</div>
 );
 
+const DonationsTable = ({ rows = [] }) => (
+  <section className="rounded-xl bg-white p-4 shadow-sm mt-6">
+    <h2 className="mb-4 text-sm font-semibold text-gray-700">Recent Donations</h2>
+
+    {rows.length === 0 ? (
+      <p className="py-10 text-center text-gray-500">No donations yet</p>
+    ) : (
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[450px] divide-y divide-gray-200 text-sm">
+          <thead>
+            <tr className="text-left text-gray-600">
+              <th className="py-2">Name</th>
+              <th className="py-2">Email</th>
+              <th className="py-2">Phone</th>
+              <th className="py-2 ">Amount (₹)</th>
+              {/* <th className="py-2">Status</th> */}
+              <th className="py-2">Date</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {rows.map((d) => (
+              <tr key={d._id} className="whitespace-nowrap">
+                <td className="py-2 font-medium">{d.name}</td>
+                <td className="py-2 text-gray-700">{d.email}</td>
+                <td className="py-2 text-gray-700">{d.phone}</td>
+                <td className="py-2 ">{d.amount.toLocaleString()}</td>
+               
+                <td className="py-2 text-gray-600">
+                  {new Date(d.createdAt).toLocaleDateString()}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </section>
+);
+
 export default function AdminDashboard() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [updating, setUpdating] = useState(false);
   const [videoURL, setVideoURL] = useState("");
+  const [donations, setDonations] = useState([]);
+
+useEffect(() => { loadStudents(); loadDonations(); }, []);
+
+const loadDonations = async () => {
+  try {
+    const { data } = await axios.get("http://localhost:8000/api/donates");
+    setDonations(data.data);
+  } catch (e) {
+    console.error("Failed to load donations", e);
+  }
+};
+
 
   useEffect(() => { loadStudents(); }, []);
   const loadStudents = async () => {
@@ -190,7 +242,10 @@ export default function AdminDashboard() {
             </table>
           </div>
         )}
+        
       </section>
+      <DonationsTable rows={donations} />
+
 
       {/* Modal */}
       {selected && (
