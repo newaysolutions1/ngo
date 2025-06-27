@@ -21,7 +21,7 @@ export default function StatsBar() {
             key={idx}
             className={`bg-[#064C3A] text-white px-4 py-5 rounded-xl text-center shadow-md
           w-36 sm:w-auto
-            ${idx === stats.length - 1 ? "col-span-2 w-full" : ""}`}
+            ${idx === stats.length - 1 ? "col-span-2 w-full" : "w-full"}`}
 >
             <p className="text-2xl sm:text-4xl font-bold leading-tight">
               {inView ? (

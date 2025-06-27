@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, Shield } from "lucide-react";
 
-const EMAIL = "admin@example.com";
-const PASS = "123";
+const NAME = "admin";
+const PASS = "root@123";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
   const [err, setErr] = useState("");
@@ -14,10 +14,12 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email === EMAIL && password === PASS) {
+    if (name === NAME && password === PASS) {
+      localStorage.setItem("auth", "true"); 
       nav("/admin");
-    } else {
-      setErr("Wrong email or password");
+    }
+     else {
+      setErr("Wrong name or password");
     }
   };
 
@@ -42,10 +44,10 @@ export default function Login() {
             size={18}
           />
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="name"
+            placeholder="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="w-full rounded-lg bg-white/20 px-10 py-2.5 text-sm text-white placeholder-white/70 outline-none ring-1 ring-white/30 focus:bg-white/30 focus:ring-2 focus:ring-cyan-300"
             required
           />

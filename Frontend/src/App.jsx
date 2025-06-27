@@ -9,6 +9,7 @@ import ChoosePortal from "./component/chosePathCard";
 import AdminDashboard from "./adminPanel";
 import Login from "./component/Login";
 import StudentProfile from "./component/studentSection";
+import PrivateRoute from "./component/PrivateRoute";
 function App() {
   
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,11 @@ function App() {
    
         <Router>
         <Routes>
-        <Route path="/admin" element={<AdminDashboard/>} />
+        <Route path="/admin" element={
+            <PrivateRoute>
+            <AdminDashboard />
+          </PrivateRoute>
+        } />
           <Route path="/education" element={<EduicationPage/>} />
           <Route path="/medical" element={<MedicalPage/>} />
           {/* <Route path="/" element={<Home/>} /> */}

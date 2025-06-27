@@ -117,12 +117,23 @@ export default function SupportStudentsSection() {
 
   return (
     <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 1 }} viewport={{ once: true }}>
-      <h1 className="text-center text-4xl md:text-5xl font-semibold mb-8 mt-40">Support Students</h1>
+      <h1 className="text-center text-4xl md:text-5xl font-semibold mb-10 mt-40">Support Students</h1>
 
       {students.length === 0 ? (
-        <div className="flex items-center justify-center h-96 mx-auto max-w-7xl rounded-3xl bg-gradient-to-r from-emerald-500 to-teal-400 shadow-lg">
-          <h2 className="text-4xl md:text-5xl font-bold tracking-wide text-white animate-pulse">Coming&nbsp;Soon</h2>
-        </div>
+           <div className="flex flex-col items-center justify-center  text-center px-4">
+           {/* <Sad className="w-12 h-12 text-gray-400 mb-4" /> */}
+           <h2 className="text-2xl font-semibold text-white mb-2">No Students Found</h2>
+           <p className="text-gray-400 max-w-4xl text-2xl">
+             Currently, there are no students listed for support. But every child deserves a brighter future. You can be the reason someone smiles tomorrow.
+           </p>
+           <button
+             className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-xl shadow hover:scale-105 transition-transform"
+             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+           >
+             Explore Other Ways to Help
+           </button>
+         </div>
+     
       ) : (
         <>
           {/* grid */}

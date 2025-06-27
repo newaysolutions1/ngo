@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode } from "swiper/modules";
@@ -16,9 +17,8 @@ import HeroWithImage from "./component/HeroImage";
 import LocationMap from "./component/map";
 import StatsBar from "./component/counter";
 import CaseStudies from "./component/caseStudies";
-import PlacesCarousel from "./component/PlacesCrousel";
 import ImpactSection from "./component/OurImpact";
-import Banner from "./component/Banner";
+import EkzariaBanner from "./component/Banner";
 
 export default function MedicalPage() {
   const images = [
@@ -32,7 +32,7 @@ export default function MedicalPage() {
   ];
 
   const navLinks = [
-    { id: 1, label: "Home", href: "#home" },
+    { id: 1, label: "Home", href: "/medical" },
     { id: 2, label: "Education", href: "/education" },
     { id: 3, label: "Join us", href: "#join" },
   ];
@@ -63,28 +63,23 @@ export default function MedicalPage() {
   if (loading) return <SiteLoader />;
 
   return (
-    <div className="scroll-smooth">
+    <div className="scroll-smooth overflow-x-hidden text-gray-900">
       <header
         id="home"
         className="relative w-full overflow-hidden bg-cover bg-center bg-no-repeat shadow-sm
-                 h-[30rem] sm:h-[35rem] md:h-[35rem] lg:h-[90rem]"
+                 h-[30rem] sm:h-[35rem] md:h-[45rem] lg:h-[60rem] xl:h-[80rem]"
       >
-        <Banner className="relative z-10" />{" "}
+        <EkzariaBanner className="relative z-10" />
         <div
           className="pointer-events-none absolute inset-0 z-0
                   bg-gradient-to-b from-black/40 via-black/10 to-black/60"
         />
         <nav
           className={`fixed left-0 z-50 flex w-full items-center justify-between
-                    bg-white/30 backdrop-blur-lg ring-1 ring-white/20 shadow-lg
+                    bg-white/30 backdrop-blur-xl ring-1 ring-white/20 shadow-lg
                     px-4 py-3 transition-all duration-300
-                    ${scrolled ? "top-0" : "top-10"}
-                    ${
-                      scrolled
-                        ? "md:left-1/2 md:w-[60%] md:-translate-x-1/2 md:rounded-3xl"
-                        : "md:left-1/2 md:w-[60%] md:-translate-x-1/2 md:rounded-3xl"
-                    }
-                    md:px-8 md:py-4`}
+                    ${scrolled ? "top-0" : "top-0"}
+                    md:left-1/2 md:w-[60%] md:-translate-x-1/2 md:rounded-3xl md:px-8 md:py-4`}
         >
           <a href="/" className="text-xl font-bold text-gray-900">
             Ekzaria
@@ -122,8 +117,7 @@ export default function MedicalPage() {
               closed: { opacity: 0, y: -20, pointerEvents: "none" },
               open: { opacity: 1, y: 0, pointerEvents: "auto" },
             }}
-            className="md:hidden absolute left-1/2 top-full mt-2 w-full max-w-6xl
-                     -translate-x-1/2 rounded-2xl bg-white/90 p-6 shadow-xl"
+            className="md:hidden absolute left-0 top-full mt-2 w-full bg-white/90 p-4 shadow-xl z-40"
           >
             {navLinks.map((link) => (
               <li key={link.id} className="py-2">
@@ -139,22 +133,30 @@ export default function MedicalPage() {
           </motion.ul>
         </nav>
       </header>
+
       <ImpactSection />
-      <section className="mx-auto mb-4 max-w-8xl px-4">
-        <h2 className="mb-8 mt-20 text-center text-4xl font-semibold">
+
+      <section id="join" className="mx-auto mb-4 max-w-8xl px-4 sm:px-6 lg:px-8">
+        <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-semibold">
           Join&nbsp;Us!
         </h2>
-        <div className="mx-4 rounded-xl shadow-xl overflow-hidden sm:mx-6 lg:hidden">
-          <div className="flex aspect-[9/14] w-full items-center justify-center bg-gray-300">
+
+        {/* Mobile video placeholder */}
+        <div className="mx-4 rounded-xl shadow-xl overflow-hidden sm:mx-6 lg:hidden mt-10">
+          <div className="flex w-full aspect-[9/16] sm:aspect-[9/14] items-center justify-center bg-gray-300">
             <span className="text-sm text-gray-500">Reel placeholder</span>
           </div>
         </div>
-        <div className="hidden overflow-hidden rounded-xl shadow-xl lg:block lg:mx-12">
-          <div className="flex h-[50rem] w-full items-center justify-center bg-gray-300">
+
+        {/* Desktop video placeholder */}
+        <div className="hidden overflow-hidden rounded-xl shadow-xl lg:block lg:mx-12 mt-10">
+          <div className="flex w-full aspect-[16/9] items-center justify-center bg-gray-300">
             <span className="text-sm text-gray-500">Video placeholder</span>
           </div>
         </div>
       </section>
+
+
       <StatsBar />
       <CaseStudies />
       <HeroWithImage />

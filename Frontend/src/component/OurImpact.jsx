@@ -73,11 +73,12 @@ export default function ImpactSection() {
             1280:{ slidesPerView: 3,    spaceBetween: 80 },
             1536:{ slidesPerView: 3.5,  spaceBetween: 100 },
           }}
-          className="px-4 sm:px-6 md:px-8 overflow-visible h-[46rem] mt-10"
+          className="px-4 sm:px-6 md:px-8 overflow-visible mt-10 lg:h-[46rem]"
         >
           {images.map((src, i) => (
             <SwiperSlide key={i} className="overflow-visible">
-              <div className="aspect-[3/4] rounded-3xl shadow-lg bg-gray-300 overflow-visible">
+              <div className="aspect-[3/4] sm:aspect-[4/5] md:aspect-[5/6] rounded-3xl shadow-lg bg-gray-300 overflow-hidden">
+
                 <img
                   src={src}
                   alt={`Slide ${i}`}

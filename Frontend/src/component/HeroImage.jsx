@@ -164,7 +164,7 @@ export default function HeroWithImage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-white/20 backdrop-blur-sm bg-black/40 backdrop-blur-sm"
             onClick={toggleModal}
           >
             <motion.div
@@ -172,7 +172,7 @@ export default function HeroWithImage() {
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="relative bg-white rounded-2xl shadow-2xl w-[90%] max-w-md p-6"
+              className="relative bg-white rounded-2xl shadow-2xl bg-white/10 backdrop-blur-sm w-[90%] max-w-md p-6"
               onClick={(e) => e.stopPropagation()}
             >
               <button onClick={toggleModal}

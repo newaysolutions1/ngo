@@ -2,13 +2,13 @@
 import React from "react";
 import { ArrowUpRight } from "lucide-react"; // optional icon library
 
-const HopeInAction = () => {
+const HopeInActions = () => {
   return (
     <div className="bg-white rounded-2xl p-4 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-12 shadow-lg">
       <div className="md:w-1/2 w-full">
         <div className="relative">
           <img
-                      src="https://images.unsplash.com/photo-1611080626919-7c9ad76de0e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=700"
+                      src="/images/image.png"
 
             alt="Hope in Action"
             className="rounded-xl w-full h-auto object-cover"
@@ -43,4 +43,4 @@ const HopeInAction = () => {
   );
 };
 
-export default HopeInAction;
+export default HopeInActions;

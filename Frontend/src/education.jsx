@@ -6,6 +6,7 @@ import FaqSection from "./component/faqSection";
 import SiteLoader from "./component/SiteLoader";
 import { Menu, X } from "lucide-react";
 import SupportStudentsSection from "./component/SupportStudent";
+import HopeInAction from "./component/Mission";
 
 export default function EducationPage() {
   const [loading, setLoading] = useState(true);
@@ -95,7 +96,7 @@ export default function EducationPage() {
       <nav className={`fixed left-0 z-50 flex w-full items-center justify-between
                     bg-white/30 backdrop-blur-lg ring-1 ring-white/20 shadow-lg
                     px-4 py-3 transition-all duration-300
-                    ${scrolled ? "top-0" : "top-10"}
+                    ${scrolled ? "top-0" : "top-0"}
                     ${scrolled
                       ? "md:left-1/2 md:w-[60%] md:-translate-x-1/2 md:rounded-3xl"
                       : "md:left-1/2 md:w-[60%] md:-translate-x-1/2 md:rounded-3xl"}
@@ -181,8 +182,8 @@ export default function EducationPage() {
       </nav>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={toggleModal}>
-          <div className="relative bg-white rounded-2xl shadow-2xl w-[90%] max-w-md max-h-[80vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/20 backdrop-blur-lg bg-black/40 backdrop-blur-sm" onClick={toggleModal}>
+          <div className="relative bg-white rounded-2xl shadow-2xl w-[90%] bg-white/10 backdrop-blur-md max-w-md max-h-[80vh] overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
             <button onClick={toggleModal} className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 focus:outline-none">
               <X size={24} />
             </button>
@@ -335,15 +336,8 @@ export default function EducationPage() {
               </h1>
               </div>
       
-              <div className="mx-4 md:mx-12 my-12 rounded-[2rem] shadow-md overflow-hidden bg-white flex flex-col md:flex-row">
-                <div className="w-full md:w-full h-[200px]  md:h-[500px]">
-                  <img
-                    src="/images/image.svg"
-                    alt="Hope in Action"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
+           
+              <HopeInAction/>
             </motion.div>
       <section className="mx-auto mb-8 max-w-8xl px-4 mt-20">
         <div className="mx-4 rounded-xl shadow-xl overflow-hidden sm:mx-6 lg:hidden">
